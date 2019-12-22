@@ -1,0 +1,15 @@
+{
+  "name": "femforeveryone",
+  "version": "1.0.0",
+  "description": "finite element methods on web",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-gyp": "^5.0.7"
+  }
+}
