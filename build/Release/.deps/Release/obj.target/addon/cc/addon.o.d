@@ -6,7 +6,8 @@ Release/obj.target/addon/cc/addon.o: ../cc/addon.cc \
   /Users/takashimac/Library/Caches/node-gyp/12.14.0/include/node/v8-version.h \
   /Users/takashimac/Library/Caches/node-gyp/12.14.0/include/node/v8config.h \
   /Users/takashimac/Library/Caches/node-gyp/12.14.0/include/node/v8-platform.h \
-  /Users/takashimac/Library/Caches/node-gyp/12.14.0/include/node/node_version.h
+  /Users/takashimac/Library/Caches/node-gyp/12.14.0/include/node/node_version.h \
+  ../cc/triangular.h
 ../cc/addon.cc:
 /Users/takashimac/Library/Caches/node-gyp/12.14.0/include/node/node.h:
 /Users/takashimac/Library/Caches/node-gyp/12.14.0/include/node/v8.h:
@@ -15,3 +16,4 @@ Release/obj.target/addon/cc/addon.o: ../cc/addon.cc \
 /Users/takashimac/Library/Caches/node-gyp/12.14.0/include/node/v8config.h:
 /Users/takashimac/Library/Caches/node-gyp/12.14.0/include/node/v8-platform.h:
 /Users/takashimac/Library/Caches/node-gyp/12.14.0/include/node/node_version.h:
+../cc/triangular.h:

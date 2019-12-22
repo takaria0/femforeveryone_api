@@ -23,4 +23,17 @@ app.post('/add', (req, res) => {
   });
 });
 
+app.post('/triangular', (req, res) => {
+  let geometries = req.body;
+
+  const result = cc.triangular(geometries);
+  console.log(result)
+
+  return res.status(200).json({
+    success: true,
+    messages: 'triangulared successfully.',
+    results: result
+  });
+});
+
 app.listen(4000, () => console.log('Example app listening on port 4000!'))
