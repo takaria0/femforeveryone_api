@@ -110,7 +110,8 @@ INCS_Release := \
 	-I/Users/takashimac/Library/Caches/node-gyp/12.14.0/deps/v8/include
 
 OBJS := \
-	$(obj).target/$(TARGET)/cc/addon.o
+	$(obj).target/$(TARGET)/cc/addon.o \
+	$(obj).target/$(TARGET)/cc/bowyerwatson.o
 
 # Add to the list of files we specially track dependencies for.
 all_deps += $(OBJS)

@@ -1,9 +1,10 @@
 // addon.cc
 #include <node.h>
 #include <v8.h>
-#include "triangular.h"
 #include <vector>
 #include <array>
+#include "bowyerwatson.h"
+#include "fem.h"
 
 using v8::Exception;
 using v8::FunctionCallbackInfo;
@@ -19,19 +20,6 @@ using v8::Context;
 using v8::Integer;
 
 using namespace std;
-
-// coordinate unpackCoordinates(Isolate *Isolate, const v8::FunctionCallbackInfo<Value> &args)
-// {
-//   Handle<Array> coordArray = Handle<Array>::Cast(args[0]);
-//   vector<vector<double> > coordinates;
-
-//   for (int i = 0; i < coordArray->Length(); i++)
-//   {
-//     coordinates.push_back(Handle<Array>::Cast(coordArray->Get(i)));
-//   }
-//   return coordinates;
-// }
-
 
 void Add(const FunctionCallbackInfo<Value> &args)
 {
@@ -61,21 +49,19 @@ void Triangular(const FunctionCallbackInfo<Value> &args)
     }
   }
   //////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-  Delaunay::triangulate(arrayCC);
-  
-
-
+  Delaunay tri;
+  TwoDimensionTriangularFiniteElementMethod fem;
+  vector<vector<double>> triangles;
+  tri.triangulate(arrayCC, 50);
+  triangles = tri.getTriangles();
   //////////////////////////////////////////////////////////////////////////////////////////
-  Local<Array> returnArrayJS = Array::New(isolate, arrayJS->Length());
-  for (uint32_t i = 0; i < arrayCC.size(); i++)
+  Local<Array> returnArrayJS = Array::New(isolate, triangles.size());
+  for (uint32_t i = 0; i < triangles.size(); i++)
   {
-    Local<Array> tempArray = Array::New(isolate, arrayCC[i].size());
-    for (uint32_t j = 0; j < arrayCC[i].size(); j++)
+    Local<Array> tempArray = Array::New(isolate, triangles[i].size());
+    for (uint32_t j = 0; j < triangles[i].size(); j++)
     {
-      tempArray->Set(j, Number::New(isolate, arrayCC[i][j]));
+      tempArray->Set(j, Number::New(isolate, triangles[i][j]));
     }
     returnArrayJS->Set(i, tempArray);
   }
