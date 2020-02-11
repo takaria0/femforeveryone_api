@@ -14,6 +14,7 @@ public:
   vector<vector<double>> add(vector<vector<double>> A, vector<vector<double>> B);
   vector<vector<double>> transpose(vector<vector<double>> matrix);
   vector<vector<double>> inverse(vector<vector<double>> matrix);
+  double det(vector<vector<double>> matrix);
 };
 
 #endif

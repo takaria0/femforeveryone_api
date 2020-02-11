@@ -1,5 +1,6 @@
 #include "linalg.h"
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -69,7 +70,8 @@ vector<vector<double>> LinAlg::add(vector<vector<double>> A, vector<vector<doubl
   // C = A + B
   if (A.size() != B.size() || A[0].size() != B[0].size())
   {
-    return ;
+    vector<vector<double>> a{1};
+    return a;
   }
 
   vector<vector<double>> C(A.size(), vector<double>(B[0].size(), 0.0));
@@ -81,4 +83,20 @@ vector<vector<double>> LinAlg::add(vector<vector<double>> A, vector<vector<doubl
     }
   }
   return C;
+}
+
+double LinAlg::det(vector<vector<double>> matrix)
+{
+  double det;
+  if (matrix.size() == 3)
+  {
+    det = 
+    (matrix[0][0] * matrix[1][1] * matrix[2][2]) 
+    + (matrix[0][1] * matrix[1][2] * matrix[2][0]) 
+    + (matrix[0][2] * matrix[1][0] * matrix[2][1]) 
+    - (matrix[0][2] * matrix[1][1] * matrix[2][0]) 
+    - (matrix[1][0] * matrix[0][1] * matrix[2][2]) 
+    - (matrix[1][2] * matrix[2][1] * matrix[0][0]);
+  }
+  return det;
 }

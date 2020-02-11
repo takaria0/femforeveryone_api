@@ -26,9 +26,10 @@ app.post('/add', (req, res) => {
 });
 
 app.post('/triangular', (req, res) => {
-  let geometries = req.body;
+  let geometries = req.body.geometries;
+  let numberOfElements = req.body.numberOfElements;
 
-  const result = cc.triangular(geometries);
+  const result = cc.triangular(geometries, numberOfElements);
   console.log(result)
 
   return res.status(200).json({

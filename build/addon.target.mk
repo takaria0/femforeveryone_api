@@ -111,7 +111,10 @@ INCS_Release := \
 
 OBJS := \
 	$(obj).target/$(TARGET)/cc/addon.o \
-	$(obj).target/$(TARGET)/cc/bowyerwatson.o
+	$(obj).target/$(TARGET)/cc/bowyerwatson.o \
+	$(obj).target/$(TARGET)/cc/utils.o \
+	$(obj).target/$(TARGET)/cc/linalg.o \
+	$(obj).target/$(TARGET)/cc/fem.o
 
 # Add to the list of files we specially track dependencies for.
 all_deps += $(OBJS)

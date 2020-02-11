@@ -1,13 +1,11 @@
 #include "bowyerwatson.h"
+#include "utils.h"
 #include <random>
 #include <iostream>
 using namespace std;
 
-const vector<vector<double>> &Delaunay::triangulate(vector<vector<double>> &vertices, int number)
+vector<vector<double>> Delaunay::triangulate(vector<vector<double>> vertices, int number)
 {
-  // Store the vertices locally
-  _vertices = vertices;
-
   // Initialization
   double minX = vertices[0][0];
   double minY = vertices[0][1];
@@ -34,103 +32,105 @@ const vector<vector<double>> &Delaunay::triangulate(vector<vector<double>> &vert
   // std::cout << dist6(rng) << std::endl;
 
   // add random coordinates
-  for (int i = 0; i < number; i++)
+  for (int i = 0; i < number * 2; i++)
   {
-    vertices.push_back({distX(rng), distY(rng)});
+    _vertices.push_back({distX(rng), distY(rng)});
   }
 
-  // I don't know whats going on
-  const double dx = maxX - minX;
-  const double dy = maxY - minY;
-  const double deltaMax = std::max(dx, dy);
-  const double midx = 0.5 * (minX + maxX);
-  const double midy = 0.5 * (minY + maxY);
+  // have to add a super triangle first
+  // init
+  // Store the vertices locally
+  _borders = vertices;
+  _triangles.push_back({
+      _borders[3][0],
+      _borders[3][1],
+      _borders[1][0],
+      _borders[1][1],
+      _borders[0][0],
+      _borders[0][1],
+  });
+  _triangles.push_back({
+      _borders[3][0],
+      _borders[3][1],
+      _borders[2][0],
+      _borders[2][1],
+      _borders[1][0],
+      _borders[1][1],
+  });
 
-  // initialize first triangle
-  const vector<double> p1 = {midx - 20 * deltaMax, midy - deltaMax};
-  const vector<double> p2 = {midx, midy + 20 * deltaMax};
-  const vector<double> p3 = {midx + 20 * deltaMax, midy - deltaMax};
+  Utils util;
 
-  // const VertexType p1(midx - 20 * deltaMax, midy - deltaMax);
-  // const VertexType p2(midx, midy + 20 * deltaMax);
-  // const VertexType p3(midx + 20 * deltaMax, midy - deltaMax);
-
-  // // Create a list of triangles, and add the supertriangle in it
-  // _triangles.push_back(p1);
-  // _triangles.push_back(p2);
-  // _triangles.push_back(p3);
-
-  // for (auto p = begin(vertices); p != end(vertices); p++)
+  // test
+  // for (int i = 0; i < _vertices.size(); ++i)
   // {
-    // std::vector<EdgeType> polygon;
-
-    // for (auto &t : _triangles)
-    // {
-    //   if (t.circumCircleContains(*p))
-    //   {
-    //     t.isBad = true;
-    //     polygon.push_back(Edge{*t.a, *t.b});
-    //     polygon.push_back(Edge{*t.b, *t.c});
-    //     polygon.push_back(Edge{*t.c, *t.a});
-    //   }
-    // }
-
-    // _triangles.erase(std::remove_if(begin(_triangles), end(_triangles), [](TriangleType &t) {
-    //                    return t.isBad;
-    //                  }),
-    //                  end(_triangles));
-
-    // for (auto e1 = begin(polygon); e1 != end(polygon); ++e1)
-    // {
-    //   for (auto e2 = e1 + 1; e2 != end(polygon); ++e2)
-    //   {
-    //     if (almost_equal(*e1, *e2))
-    //     {
-    //       e1->isBad = true;
-    //       e2->isBad = true;
-    //     }
-    //   }
-    // }
-
-    // polygon.erase(std::remove_if(begin(polygon), end(polygon), [](EdgeType &e) {
-    //                 return e.isBad;
-    //               }),
-    //               end(polygon));
-
-    // for (const auto e : polygon)
-    //   _triangles.push_back(TriangleType(*e.v, *e.w, *p));
+  //   vector<double> newpoints = {_vertices[i][0], _vertices[i][1]};
+  //   vector<double> tempTri = util.findTriangle(_triangles, newpoints);
+  //   _triangles.push_back(tempTri);
   // }
+  //////////////////
 
-  // _triangles.erase(std::remove_if(begin(_triangles), end(_triangles), [p1, p2, p3](TriangleType &t) {
-  //                    return t.containsVertex(p1) || t.containsVertex(p2) || t.containsVertex(p3);
-  //                  }),
-  //                  end(_triangles));
 
-  // for (const auto t : _triangles)
-  // {
-  //   _edges.push_back(Edge{*t.a, *t.b});
-  //   _edges.push_back(Edge{*t.b, *t.c});
-  //   _edges.push_back(Edge{*t.c, *t.a});
-  // }
+  int i = 0; // don't change until make an super triangle
+  int loopCount = _vertices.size();
+  bool result;
+  while (i < loopCount)
+  {
+    std::cout << "here is -> " << i << "\n";
+    std::cout << "_vertices size is -> " << _vertices.size() << "\n";
+    //////////////////////////////////////
+    // Here is the cause of this problem
+    std::cout << "before abe\n";
+    double abe = _vertices[i][1];
+    std::cout << "before create tempVertex\n";
+    vector<double> tempVertex = {_vertices[i][0], _vertices[i][1]};
+    std::cout << "before checkInsideCircumvent \n";
+    result = util.checkInsideCircumvent(_triangles, tempVertex);
+    // result = true;
+    //////////////////////////////////////
 
-  _triangles = vertices;
+    if (i > _vertices.size())
+    {
+      break;
+    }
+    if (result)
+    {
+      // good triangle
+      std::cout << " --------------------------------------------------------------------\n";
+      std::cout << " good +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+      std::cout << " --------------------------------------------------------------------\n";
+      vector<double> newpoints = {_vertices[i][0], _vertices[i][1]};
+      vector<double> tempTri = util.findTriangle(_triangles, newpoints);
+      _triangles.push_back(tempTri);
+      i += 1;
+    }
+    else
+    {
+      // bad triangle
+      std::cout << " --------------------------------------------------------------------\n";
+      std::cout << " bad ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| \n";
+      std::cout << " --------------------------------------------------------------------\n";
+      _vertices.push_back({distX(rng), distY(rng)});
+      ++i;
+      loopCount += 1;
+    }
+    // std::cout << "_triangles max_size: " << _triangles.max_size() << "\n";
+    // std::cout << "_vertices max_size: " << _vertices.max_size() << "\n";
+  }
+  // _triangles = _vertices;
   return _triangles;
 }
 
-const vector<vector<double>> &
-Delaunay::getTriangles() const
+vector<vector<double>> Delaunay::getTriangles()
 {
   return _triangles;
 }
 
-const vector<vector<double>> &
-Delaunay::getEdges() const
+vector<vector<double>> Delaunay::getEdges()
 {
   return _edges;
 }
 
-const vector<vector<double>> &
-Delaunay::getVertices() const
+vector<vector<double>> Delaunay::getVertices()
 {
   return _vertices;
 }
